@@ -18,7 +18,7 @@ async function run() {
         // const body = github.context.payload.pull_request.body || '';
         const ticket = `${inputs.host}browse/${inputs.board}-999`;
         request.body = ({
-            prefix: `# Jira ticket\n${ticket}`
+            replace: `# Jira ticket\n${ticket}`
         })
 
         const octokit = github.getOctokit(inputs.token);

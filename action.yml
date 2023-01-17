@@ -10,9 +10,6 @@ inputs:
   repo-token:
     description: 'Github Repo Token'
     required: true
-outputs:
-  test: # id of output
-    description: 'test'
 runs:
   using: 'node16'
   main: 'dist/index.js'
