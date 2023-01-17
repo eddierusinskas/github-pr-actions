@@ -7,6 +7,9 @@ inputs:
   board:
     description: 'JIRA Board'
     required: true
+outputs:
+  test: # id of output
+    description: 'test'
 runs:
   using: 'node16'
   main: 'index.js'
