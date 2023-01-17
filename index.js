@@ -22,7 +22,6 @@ async function run() {
         const title = github.context.payload.pull_request.title || '';
 
 
-        let ticket = null;
         if(title.toUpperCase().startsWith(inputs.jira_board)) {
             const formattedTitle = title.replace(inputs.jira_board + "-", "");
             let ticketNumberIndex = 1;
@@ -31,12 +30,10 @@ async function run() {
             }
             const ticketNumber = formattedTitle.substring(0, ticketNumberIndex);
             const body = github.context.payload.pull_request.body || '';
-            let ticket = `${inputs.jira_board}-${ticketNumber}`;
+            const ticket = `${inputs.jira_board}-${ticketNumber}`;
             const ticketUrl = `${inputs.jira_host}browse/${ticket}`;
             request.body = `# Jira issue\n${ticketUrl}\n` + body;
-        }
 
-        if(ticket) {
             const octokit = new Octokit({
                 auth: inputs.github_token
             });
