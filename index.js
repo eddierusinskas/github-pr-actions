@@ -39,9 +39,17 @@ async function run() {
             });
             const response = await octokit.rest.pulls.update(request);
 
-            axios.post(`${inputs.jira_host}rest/api/3/issue/${ticket}/comment`, {
+            axios.post(
+                `${inputs.jira_host}rest/api/3/issue/${ticket}/comment`,
+                {
                 body: "Pull Request has been opened: " + github.context.payload.pull_request.html_url
-            });
+            },
+                {
+                    headers: {
+                        'Authorization': `Basic ${inputs.jira_token}`
+                    }
+                }
+            );
 
             core.info(`Response: ${response.status}`);
             if (response.status !== 200) {
