@@ -9803,9 +9803,12 @@ async function run() {
             core.error('Updating the pull request has failed');
         }
     } catch (error) {
+        core.error(error)
         core.setFailed(error.message);
     }
 }
+
+run()
 
 })();
 
