@@ -8,7 +8,7 @@ async function run() {
             jira_host: core.getInput('jira-host', {required: true}),
             jira_board: core.getInput('jira-board', {required: true}),
             jira_token: core.getInput('jira-token', {required: true}),
-            github_token: core.getInput('repo-token', {required: true}),
+            github_token: core.getInput('github-token', {required: true}),
         }
 
         const { Octokit } = require("@octokit/rest");

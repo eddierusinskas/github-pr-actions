@@ -7,7 +7,10 @@ inputs:
   jira-board:
     description: 'JIRA Board'
     required: true
-  repo-token:
+  jira-token:
+    description: 'JIRA Token'
+    required: true
+  github-token:
     description: 'Github Repo Token'
     required: true
 runs:
