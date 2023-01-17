@@ -1,11 +1,14 @@
 name: 'JIRA Ticket'
 description: 'Links JIRA ticket and moves tasks IN PR if not already there'
 inputs:
-  host:
+  jira-host:
     description: 'Atlassian JIRA host'
     required: true
-  board:
+  jira-board:
     description: 'JIRA Board'
+    required: true
+  repo-token:
+    description: 'Github Repo Token'
     required: true
 outputs:
   test: # id of output
