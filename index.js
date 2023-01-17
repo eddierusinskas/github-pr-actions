@@ -1,7 +1,7 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
 
-try {
+// try {
     const request = {
         owner: github.context.repo.owner,
         repo: github.context.repo.repo,
@@ -13,7 +13,7 @@ try {
     request.body = ({
         prefix: `# Jira ticket\n${ticket}`
     })
-
-} catch (error) {
-    core.setFailed(error.message);
-}
+//
+// } catch (error) {
+//     core.setFailed(error.message);
+// }
