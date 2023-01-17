@@ -30,7 +30,7 @@ async function run() {
             }
             const ticketNumber = formattedTitle.substring(0, ticketNumberIndex);
             const body = github.context.payload.pull_request.body || '';
-            const ticket = `${inputs.jira_board}-${ticketNumber}`;
+            const ticket = `${inputs.jira_board}-${ticketNumber}`.trim();
             const ticketUrl = `${inputs.jira_host}browse/${ticket}`;
             request.body = `# Jira issue\n${ticketUrl}\n` + body;
 
@@ -39,7 +39,7 @@ async function run() {
             });
             const response = await octokit.rest.pulls.update(request);
 
-            axios.post(`${inputs.jira_host}/rest/api/3/issue/${ticket}/comment`, {
+            axios.post(`${inputs.jira_host}rest/api/3/issue/${ticket}/comment`, {
                 body: "Pull Request has been opened: " + github.context.payload.pull_request.html_url
             });
 
