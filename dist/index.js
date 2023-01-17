@@ -12074,17 +12074,26 @@ async function run() {
 
         const { Octokit } = __nccwpck_require__(6827);
 
-
-
         const request = {
             owner: github.context.repo.owner,
             repo: github.context.repo.repo,
             pull_number: github.context.payload.pull_request.number,
         }
 
-        // const body = github.context.payload.pull_request.body || '';
-        const ticket = `${inputs.host}browse/${inputs.board}-999`;
-        request.body = `# Jira ticket\n${ticket}`;
+        const title = github.context.payload.pull_request.title || '';
+
+
+        if(title.toUpperCase().startsWith(inputs.board)) {
+            const formattedTitle = title.replace(inputs.board + "-", "");
+            let ticketNumberIndex = 1;
+            while (!isNaN(formattedTitle.substring(0, ticketNumberIndex + 1))) {
+                ticketNumberIndex++;
+            }
+            const ticketNumber = formattedTitle.substring(0, ticketNumberIndex);
+            const body = github.context.payload.pull_request.body || '';
+            const ticket = `${inputs.host}browse/${inputs.board}-${ticketNumber}`;
+            request.body = `# Jira ticket\n${ticket}\n` + body;
+        }
 
         const octokit = new Octokit({
             auth: inputs.token
