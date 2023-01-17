@@ -9,6 +9,10 @@ async function run() {
             token: core.getInput('repo-token', {required: true}),
         }
 
+        const { Octokit } = require("@octokit/rest");
+
+
+
         const request = {
             owner: github.context.repo.owner,
             repo: github.context.repo.repo,
@@ -21,8 +25,10 @@ async function run() {
             replace: `# Jira ticket\n${ticket}`
         })
 
-        const octokit = github.getOctokit(inputs.token);
-        const response = await octokit.pulls.update(request);
+        const octokit = new Octokit({
+            auth: inputs.token
+        });
+        const response = await octokit.rest.pulls.update(request);
 
         core.info(`Response: ${response.status}`);
         if (response.status !== 200) {
