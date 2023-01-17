@@ -9775,7 +9775,7 @@ var __webpack_exports__ = {};
 const core = __nccwpck_require__(312);
 const github = __nccwpck_require__(3370);
 
-try {
+// try {
     const request = {
         owner: github.context.repo.owner,
         repo: github.context.repo.repo,
@@ -9787,10 +9787,10 @@ try {
     request.body = ({
         prefix: `# Jira ticket\n${ticket}`
     })
-
-} catch (error) {
-    core.setFailed(error.message);
-}
+//
+// } catch (error) {
+//     core.setFailed(error.message);
+// }
 })();
 
 module.exports = __webpack_exports__;
