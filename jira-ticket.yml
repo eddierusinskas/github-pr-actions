@@ -1,0 +1,12 @@
+name: 'JIRA Ticket'
+description: 'Links JIRA ticket and moves tasks IN PR if not already there'
+inputs:
+  host:
+    description: 'Atlassian JIRA host'
+    required: true
+  board:
+    description: 'JIRA Board'
+    required: true
+runs:
+  using: 'node16'
+  main: 'index.js'
