@@ -45,8 +45,9 @@ async function run() {
                 body: "Pull Request has been opened: " + github.context.payload.pull_request.html_url
             },
                 {
-                    headers: {
-                        'Authorization': `Basic ${inputs.jira_token}`
+                    auth: {
+                        email: "erusinskas@wonde.com",
+                        password: inputs.jira_token
                     }
                 }
             );
