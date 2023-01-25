@@ -18370,7 +18370,7 @@ async function run() {
             },
                 {
                     auth: {
-                        email: "erusinskas@wonde.com",
+                        email: "edgaras.rusinskas@gmail.com",
                         password: inputs.jira_token
                     }
                 }
