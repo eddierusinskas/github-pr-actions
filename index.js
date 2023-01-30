@@ -55,7 +55,7 @@ async function run() {
             // Get JIRA ticket
             const transitions = await axios.get(`issue/${ticket}/transitions`);
 
-            const isPRTransitionAvailable = !!transitions.transitions.find(transition => transition.id == inputs.jira_in_pr_id);
+            const isPRTransitionAvailable = !!transitions.data.transitions.find(transition => transition.id == inputs.jira_in_pr_id);
 
             if(isPRTransitionAvailable) {
                 // Move ticket to "In PR"
