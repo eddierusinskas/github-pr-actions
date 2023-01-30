@@ -51,17 +51,17 @@ async function run() {
                 }
             })
 
-            core.debug(`${inputs.jira_host}rest/api/3/`);
-            core.debug({
+            core.info(`${inputs.jira_host}rest/api/3/`);
+            core.info({
                 email: inputs.jira_email,
                 password: inputs.jira_token
             });
-            core.debug(`issue/${ticket}`);
+            core.info(`issue/${ticket}`);
 
             // Get JIRA ticket
             const issue = await axios.get(`issue/${ticket}`);
 
-            core.debug(issue);
+            core.info(issue);
 
             if(issue.status.id == inputs.jira_in_progress_id) {
                 // Move ticket to "In PR"
