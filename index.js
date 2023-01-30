@@ -1,6 +1,6 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
-const axios = require('axios');
+let axios = require('axios');
 
 async function run() {
     try {
@@ -43,7 +43,7 @@ async function run() {
             const response = await octokit.rest.pulls.update(request);
 
 
-            const axios = axios.create({
+            axios = axios.create({
                 baseURL: `${inputs.jira_host}rest/api/3`,
                 auth: {
                     email: inputs.jira_email,
