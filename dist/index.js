@@ -18331,11 +18331,14 @@ async function run() {
         const inputs = {
             jira_host: core.getInput('jira-host', {required: true}),
             jira_board: core.getInput('jira-board', {required: true}),
+            jira_email: core.getInput('jira-email', {required: true}),
             jira_token: core.getInput('jira-token', {required: true}),
+            jira_in_progress_id: core.getInput('jira-in-progress-id', {required: true}),
+            jira_in_pr_id: core.getInput('jira-in-pr-id', {required: true}),
             github_token: core.getInput('github-token', {required: true}),
         }
 
-        const { Octokit } = __nccwpck_require__(6827);
+        const {Octokit} = __nccwpck_require__(6827);
 
         const request = {
             owner: github.context.repo.owner,
@@ -18346,7 +18349,7 @@ async function run() {
         const title = github.context.payload.pull_request.title || '';
 
 
-        if(title.toUpperCase().startsWith(inputs.jira_board)) {
+        if (title.toUpperCase().startsWith(inputs.jira_board)) {
             const formattedTitle = title.replace(inputs.jira_board + "-", "");
             let ticketNumberIndex = 1;
             while (!isNaN(formattedTitle.substring(0, ticketNumberIndex + 1))) {
@@ -18363,18 +18366,26 @@ async function run() {
             });
             const response = await octokit.rest.pulls.update(request);
 
-            axios.post(
-                `${inputs.jira_host}rest/api/3/issue/${ticket}/comment`,
-                {
-                body: "Pull Request has been opened: " + github.context.payload.pull_request.html_url
-            },
-                {
-                    auth: {
-                        email: "edgaras.rusinskas@gmail.com",
-                        password: inputs.jira_token
-                    }
+
+            const axios = axios.create({
+                baseURL: `${inputs.jira_host}rest/api/3`,
+                auth: {
+                    email: inputs.jira_email,
+                    password: inputs.jira_token
                 }
-            );
+            })
+
+            // Get JIRA ticket
+            const issue = await axios.get(`issue/${ticket}`);
+
+            if(issue.status.id == inputs.jira_in_progress_id) {
+                // Move ticket to "In PR"
+                await axios.put(`issue/${ticket}`, {
+                    transition: {
+                        id: inputs.jira_in_pr_id
+                    }
+                });
+            }
 
             core.info(`Response: ${response.status}`);
             if (response.status !== 200) {
