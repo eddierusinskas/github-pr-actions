@@ -32,9 +32,9 @@ async function run() {
             }
             const ticketNumber = formattedTitle.substring(0, ticketNumberIndex);
             const body = github.context.payload.pull_request.body || '';
+            const ticket = `${inputs.jira_board}-${ticketNumber}`.trim();
 
             if(body.search("# Jira issue") === -1) {
-                const ticket = `${inputs.jira_board}-${ticketNumber}`.trim();
                 const ticketUrl = `${inputs.jira_host}browse/${ticket}`;
                 request.body = `# Jira issue\n${ticketUrl}\n` + body;
 
