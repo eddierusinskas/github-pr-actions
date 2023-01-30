@@ -59,13 +59,13 @@ async function run() {
             core.info(`issue/${ticket}`);
 
             // Get JIRA ticket
-            const issue = await axios.get(`issue/${ticket}`);
+            const issue = await axios.get(`${inputs.jira_host}rest/api/3/issue/${ticket}`);
 
             core.info(issue);
 
             if(issue.status.id == inputs.jira_in_progress_id) {
                 // Move ticket to "In PR"
-                await axios.put(`issue/${ticket}`, {
+                await axios.put(`${inputs.jira_host}rest/api/3/issue/${ticket}`, {
                     transition: {
                         id: inputs.jira_in_pr_id
                     }
