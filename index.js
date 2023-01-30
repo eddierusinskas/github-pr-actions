@@ -65,11 +65,6 @@ async function run() {
                     }
                 });
             }
-
-            core.info(`Response: ${response.status}`);
-            if (response.status !== 200) {
-                core.error('Updating the pull request has failed');
-            }
         } else {
             core.info(`Ticket in title not found: ${inputs.jira_board}`);
         }
