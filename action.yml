@@ -13,9 +13,6 @@ inputs:
   jira-token:
     description: 'JIRA Token'
     required: true
-  jira-in-progress-id:
-    description: 'JIRA In Progress Status ID'
-    required: true
   jira-in-pr-id:
     description: 'JIRA In PR Status ID'
     required: true

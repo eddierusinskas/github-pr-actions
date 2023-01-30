@@ -9,7 +9,6 @@ async function run() {
             jira_board: core.getInput('jira-board', {required: true}),
             jira_email: core.getInput('jira-email', {required: true}),
             jira_token: core.getInput('jira-token', {required: true}),
-            jira_in_progress_id: core.getInput('jira-in-progress-id', {required: true}),
             jira_in_pr_id: core.getInput('jira-in-pr-id', {required: true}),
             github_token: core.getInput('github-token', {required: true}),
         }
@@ -33,15 +32,17 @@ async function run() {
             }
             const ticketNumber = formattedTitle.substring(0, ticketNumberIndex);
             const body = github.context.payload.pull_request.body || '';
-            const ticket = `${inputs.jira_board}-${ticketNumber}`.trim();
-            const ticketUrl = `${inputs.jira_host}browse/${ticket}`;
-            request.body = `# Jira issue\n${ticketUrl}\n` + body;
 
-            const octokit = new Octokit({
-                auth: inputs.github_token
-            });
-            const response = await octokit.rest.pulls.update(request);
+            if(body.search("# Jira issue") === -1) {
+                const ticket = `${inputs.jira_board}-${ticketNumber}`.trim();
+                const ticketUrl = `${inputs.jira_host}browse/${ticket}`;
+                request.body = `# Jira issue\n${ticketUrl}\n` + body;
 
+                const octokit = new Octokit({
+                    auth: inputs.github_token
+                });
+                const response = await octokit.rest.pulls.update(request);
+            }
 
             axios = axios.create({
                 baseURL: `${inputs.jira_host}rest/api/3/`,
@@ -52,11 +53,13 @@ async function run() {
             })
 
             // Get JIRA ticket
-            const issue = await axios.get(`issue/${ticket}`);
+            const transitions = await axios.get(`issue/${ticket}/transitions`);
 
-            if(issue.status.id == inputs.jira_in_progress_id) {
+            const isPRTransitionAvailable = !!transitions.transitions.find(transition => transition.id == inputs.jira_in_pr_id);
+
+            if(isPRTransitionAvailable) {
                 // Move ticket to "In PR"
-                await axios.put(`issue/${ticket}`, {
+                await axios.post(`issue/${ticket}/transitions`, {
                     transition: {
                         id: inputs.jira_in_pr_id
                     }
