@@ -46,26 +46,17 @@ async function run() {
             axios = axios.create({
                 baseURL: `${inputs.jira_host}rest/api/3/`,
                 auth: {
-                    email: inputs.jira_email,
+                    username: inputs.jira_email,
                     password: inputs.jira_token
                 }
             })
 
-            core.info(`${inputs.jira_host}rest/api/3/`);
-            core.info({
-                email: inputs.jira_email,
-                password: inputs.jira_token
-            });
-            core.info(`issue/${ticket}`);
-
             // Get JIRA ticket
-            const issue = await axios.get(`${inputs.jira_host}rest/api/3/issue/${ticket}`);
-
-            core.info(issue);
+            const issue = await axios.get(`issue/${ticket}`);
 
             if(issue.status.id == inputs.jira_in_progress_id) {
                 // Move ticket to "In PR"
-                await axios.put(`${inputs.jira_host}rest/api/3/issue/${ticket}`, {
+                await axios.put(`issue/${ticket}`, {
                     transition: {
                         id: inputs.jira_in_pr_id
                     }
