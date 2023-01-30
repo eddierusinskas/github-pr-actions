@@ -44,7 +44,7 @@ async function run() {
 
 
             axios = axios.create({
-                baseURL: `${inputs.jira_host}rest/api/3`,
+                baseURL: `${inputs.jira_host}rest/api/3/`,
                 auth: {
                     email: inputs.jira_email,
                     password: inputs.jira_token
