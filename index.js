@@ -31,39 +31,43 @@ async function run() {
                 ticketNumberIndex++;
             }
             const ticketNumber = formattedTitle.substring(0, ticketNumberIndex);
-            const body = github.context.payload.pull_request.body || '';
-            const ticket = `${inputs.jira_board}-${ticketNumber}`.trim();
+            
+            if(ticketNumber && ticketNumber.length >= 2) {
+            
+                const body = github.context.payload.pull_request.body || '';
+                const ticket = `${inputs.jira_board}-${ticketNumber}`.trim();
 
-            if(body.search("# Jira issue") === -1) {
-                const ticketUrl = `${inputs.jira_host}browse/${ticket}`;
-                request.body = `# Jira issue\n${ticketUrl}\n` + body;
+                if(body.search("# Jira issue") === -1) {
+                    const ticketUrl = `${inputs.jira_host}browse/${ticket}`;
+                    request.body = `# Jira issue\n${ticketUrl}\n` + body;
 
-                const octokit = new Octokit({
-                    auth: inputs.github_token
-                });
-                const response = await octokit.rest.pulls.update(request);
-            }
-
-            axios = axios.create({
-                baseURL: `${inputs.jira_host}rest/api/3/`,
-                auth: {
-                    username: inputs.jira_email,
-                    password: inputs.jira_token
+                    const octokit = new Octokit({
+                        auth: inputs.github_token
+                    });
+                    const response = await octokit.rest.pulls.update(request);
                 }
-            })
 
-            // Get JIRA ticket
-            const transitions = await axios.get(`issue/${ticket}/transitions`);
-
-            const isPRTransitionAvailable = !!transitions.data.transitions.find(transition => transition.id == inputs.jira_in_pr_id);
-
-            if(isPRTransitionAvailable) {
-                // Move ticket to "In PR"
-                await axios.post(`issue/${ticket}/transitions`, {
-                    transition: {
-                        id: inputs.jira_in_pr_id
+                axios = axios.create({
+                    baseURL: `${inputs.jira_host}rest/api/3/`,
+                    auth: {
+                        username: inputs.jira_email,
+                        password: inputs.jira_token
                     }
-                });
+                })
+
+                // Get JIRA ticket
+                const transitions = await axios.get(`issue/${ticket}/transitions`);
+
+                const isPRTransitionAvailable = !!transitions.data.transitions.find(transition => transition.id == inputs.jira_in_pr_id);
+
+                if(isPRTransitionAvailable) {
+                    // Move ticket to "In PR"
+                    await axios.post(`issue/${ticket}/transitions`, {
+                        transition: {
+                            id: inputs.jira_in_pr_id
+                        }
+                    });
+                }
             }
         } else {
             core.info(`Ticket in title not found: ${inputs.jira_board}`);
